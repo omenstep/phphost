@@ -1,0 +1,33 @@
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Install core packages.
+  apt: name={{item}} state=installed
+  with_items:
+    - aptitude
+    - sudo
+    - rsync
+    - curl
+    - python-mysqldb
+
+- name: Set authorized key for root took from file.
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ root_pubkey }}"
+
+- name: Install extra packages.
+  apt: name={{item}} state=installed
+  with_items:
+    - mc
+    - git-core
+    - htop
+    - vim
+
+- name: Set timezone to Europe/Moscow.
+  shell: 'echo Europe/Moscow >/etc/timezone && dpkg-reconfigure -f noninteractive tzdata'
+
+- name: Ensure a locale exists.
+  locale_gen:
+    name: ru_RU.UTF-8
+    state: present

@@ -1,0 +1,14 @@
+- name: Install sass.
+  gem: name=sass state=present
+  become_user: "{{ user }}"
+
+- name: Locate sass executable.
+  shell: "dirname `find {{ home }} -name 'sass' -type f -print | head -n 1`"
+  register: sass_dir
+
+- name: Add sass dir to $PATH.
+  lineinfile:
+    dest: "{{ home }}/.bashrc"
+    line: "export PATH=$PATH:{{ sass_dir.stdout }}"
+    state: present
+  become_user: "{{ user }}"

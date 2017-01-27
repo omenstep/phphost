@@ -1,0 +1,21 @@
+---
+
+- name: install php packages
+  apt: name={{ item }} state=present
+  with_items: php_packages
+  tags:
+    - php
+    - php_package
+  notify:
+    - restart apache
+
+- name: Copy opcache configuration
+  template:
+    src=opcache.ini.j2
+    dest=/etc/php5/mods-available/opcache.ini
+  tags:
+    - php
+    - php_ini
+    - php_opcache
+  notify:
+    - reload apache

@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Alberto Ramírez
+  description: This Ansible Simple Role install Apache and PHP. It also allow install php packages and apache modules.
+  company: Ansiro
+  license: MIT
+  min_ansible_version: 1.8
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - development
+  - web
+dependencies: []

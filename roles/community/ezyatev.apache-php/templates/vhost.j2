@@ -1,0 +1,76 @@
+{% for vhost in apache_vhosts %}
+<VirtualHost *:{% if vhost.listen_port is defined %}{{ vhost.listen_port }}{% else %}{{ listen_port }}{% endif %}>
+    ServerName {{ vhost.server_name }}
+    DocumentRoot {{ vhost.document_root }}
+{% if vhost.server_alias is defined %}
+    ServerAlias {{ vhost.server_alias }}
+{% endif %}
+{% if vhost.ssl is defined and vhost.ssl %}
+
+    SSLEngine on
+    SSLCompression off
+    SSLCertificateFile {% if vhost.certificate_file is defined %}{{ vhost.certificate_file }}{% else %}{{ certificate_file }}{% endif %}
+
+    SSLCertificateKeyFile {% if vhost.certificate_key_file is defined %}{{ vhost.certificate_key_file }}{% else %}{{ certificate_key_file }}{% endif %}
+
+{% endif %}
+{% if vhost.assign_user is defined and vhost.assign_group is defined %}
+    AssignUserId {{ vhost.assign_user }} {{ vhost.assign_group }}
+{% endif %}
+{% if vhost.set_env is defined %}{% for env_name, env_value in vhost.set_env.iteritems() %}
+    SetEnv {{ env_name }} {{ env_value }}
+{% endfor %}{% endif %}
+
+    <Directory {{ vhost.document_root }}>
+        AllowOverride {{ vhost.directory_AllowOverride }}
+        Allow from {{ vhost.directory_allow_from }}
+        Require all granted
+        Options {{ vhost.directory_options }}
+    </Directory>
+
+{% if vhost.alias_match is defined %}{% for alias_condition, alias_value in vhost.alias_match.iteritems() %}
+    AliasMatch {{ alias_condition }} {{ alias_value }}
+{% endfor %}{% endif %}
+
+    <IfModule mod_deflate.c>
+        SetOutputFilter DEFLATE
+        # Don’t compress
+        SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+        SetEnvIfNoCase Request_URI \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
+        #Dealing with proxy servers
+        <IfModule mod_headers.c>
+            Header append Vary User-Agent
+        </IfModule>
+    </IfModule>
+
+    <IfModule mod_expires.c>
+        # turn on the module for this directory
+        ExpiresActive on
+
+        ExpiresByType text/css "access plus 15 days"
+        ExpiresByType text/javascript "access plus 15 days"
+        ExpiresByType application/javascript "access plus 15 days"
+        ExpiresByType image/png "access plus 30 days"
+    </IfModule>
+
+{% if vhost.php_value is defined %}
+    <IfModule php5_module>
+        {% for php_name, php_value in vhost.php_value.iteritems() %}
+            php_value {{ php_name }} "{{ php_value }}"
+        {% endfor %}
+    </IfModule>
+{% endif %}
+{% if vhost.error_log is defined %}
+    ErrorLog {{ vhost.error_log }}
+{% else %}
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+{% endif %}
+{% if vhost.custom_log is defined %}
+    CustomLog {{ vhost.custom_log }}
+{% else %}
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+{% endif %}
+</VirtualHost>
+
+
+{% endfor %}

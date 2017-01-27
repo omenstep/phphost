@@ -1,0 +1,65 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars_prompt:
+  - name: "vps"
+    prompt: "VPS"
+    private: no
+  tasks:
+    - add_host:
+        name: "{{ vps }}"
+        groups: dynamically_created_hosts
+
+
+- hosts: dynamically_created_hosts
+
+  vars_prompt:
+    - name: "domain"
+      prompt: "Domain name"
+      private: no
+
+    - name: "user"
+      prompt: "System user"
+      private: no
+
+    - name: "password"
+      prompt: "System password"
+      encrypt: "sha512_crypt"
+      private: yes
+
+    - name: "mysql_user"
+      prompt: "MySQL user"
+      private: no
+
+    - name: "mysql_db"
+      prompt: "MySQL DB"
+      private: no
+
+    - name: "mysql_password"
+      prompt: "MySQL password"
+      private: yes
+
+    - name: "mysql_root_password"
+      prompt: "MySQL root password"
+      private: yes
+
+  pre_tasks:
+    - include: "system.yml"
+
+  roles:
+    - { role: ezyatev.apache-php, when: domain and user and password }
+    - { role: geerlingguy.composer, when: user and password }
+    - { role: geerlingguy.mysql, when: mysql_user and mysql_db and mysql_password }
+    - { role: gotansible.nodejs, when: user and password }
+    - { role: AsianChris.rubygems, when: user and password }
+    - { role: manala.npm, when: user and password }
+
+  tasks:
+    - include: "user.yml"
+      when: user and password
+
+    - include: "apache.yml"
+      when: domain and user and password
+
+    - include: "grunt.yml"
+      when: user and password

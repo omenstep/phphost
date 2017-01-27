@@ -1,0 +1,16 @@
+---
+- name: Update and then safe upgrade installed packages
+  apt:
+    update_cache=yes
+    upgrade=yes
+  become: yes
+  become_method: sudo
+
+- name: Install Common Packages
+  apt: pkg={{ item }} state=present
+  become: yes
+  become_method: sudo
+  with_items:
+    - curl
+    - htop
+    - vim

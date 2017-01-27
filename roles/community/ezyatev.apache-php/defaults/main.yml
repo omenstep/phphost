@@ -1,0 +1,31 @@
+---
+
+php_packages:
+  - php5
+
+opcache_enable: 1
+opcache_enable_cli: 0
+opcache_revalidate_freq: 2
+opcache_validate_timestamps: 1
+opcache_max_accelerated_files: 2000
+opcache_memory_consumption: 64
+opcache_interned_strings_buffer: 4
+opcache_fast_shutdown: 0
+
+apache_modules:
+  - rewrite
+  - php5
+
+vhost_filename: aramirez.es.conf
+listen_port: 80
+certificate_file: '/etc/apache2/ssl/server.crt'
+certificate_key_file: '/etc/apache2/ssl/server.key'
+
+apache_vhosts:
+  - server_name: aramirez.es
+    document_root: /var/www/aramirez.es/web
+    directory_AllowOverride: All
+    directory_allow_from: All
+    directory_options: FollowSymLinks
+    alias_match:
+      ^(.*)$: /var/www/aramirez.es/web/index.php

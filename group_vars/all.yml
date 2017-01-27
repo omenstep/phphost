@@ -1,0 +1,47 @@
+---
+root_pubkey: "{{ lookup('file', '/home/eu/.ssh/eu.pub') }}"
+
+home: "/home/{{ user }}"
+shell: "/bin/bash"
+
+project_dir: "{{ home }}/{{ domain }}/public"
+
+manala_npm_packages:
+  - package: grunt
+  - package: grunt-cli
+  - package: less
+
+mysql_databases:
+  - name: "{{ mysql_db }}"
+    encoding: utf8
+    collation: utf8_general_ci
+mysql_users:
+  - name: "{{ mysql_user }}"
+    host: "localhost"
+    password: "{{ mysql_password }}"
+    priv: "{{ mysql_db }}.*:ALL"
+mysql_root_username: root
+
+php_packages:
+  - libapache2-mod-php5
+  - php5-mysql
+  - php5-curl
+  - php5-gd
+  - php5-mcrypt
+
+apache_modules:
+  - rewrite
+  - php5
+
+vhost_filename: "{{ domain }}.conf"
+apache_vhosts:
+  - server_name: "{{ domain }}"
+    server_alias: "www.{{ domain }}"
+    document_root: "{{ project_dir }}"
+    directory_AllowOverride: All
+    directory_allow_from: All
+    directory_options: FollowSymLinks
+    assign_user: "{{ user }}"
+    assign_group: "{{ user }}"
+    error_log: "${APACHE_LOG_DIR}/{{domain}}-error.log"
+    custom_log: "${APACHE_LOG_DIR}/{{domain}}-access.log combined"

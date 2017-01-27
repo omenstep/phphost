@@ -1,0 +1,7 @@
+---
+- name: Install RubyGems
+  apt: pkg={{ item }} state=present
+  sudo: yes
+  with_items:
+    - ruby
+    - rubygems-integration

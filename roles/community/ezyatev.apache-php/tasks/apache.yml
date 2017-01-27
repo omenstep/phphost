@@ -1,0 +1,48 @@
+---
+
+- name: install Apache
+  apt: name=apache2 state=present
+  tags:
+    - apache
+
+- name: Install mpm-itk package.
+  apt: name=libapache2-mpm-itk state=installed
+  notify:
+    - restart apache
+
+- name: ensure required modules are installed
+  apache2_module: >
+    name={{ item }}
+    state=present
+  with_items: apache_modules
+  notify:
+    - restart apache
+  tags:
+    - apache
+    - apache_module
+
+- name: Copy default vhost page
+  template:
+    src: "default_vhost.j2"
+    dest: "/var/www/html/index.html"
+
+- name: Copy new virtual host
+  template:
+    src=vhost.j2
+    dest=/etc/apache2/sites-available/{{ vhost_filename }}
+  tags:
+    - apache
+    - apache_vhost
+  notify:
+    - reload apache
+
+- name: Enable the new vhost
+  file:
+    src=/etc/apache2/sites-available/{{ vhost_filename }}
+    dest=/etc/apache2/sites-enabled/{{ vhost_filename }}
+    state=link
+  tags:
+    - apache
+    - apache_vhost
+  notify:
+    - reload apache
