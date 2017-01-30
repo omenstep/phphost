@@ -43,23 +43,39 @@
       prompt: "MySQL root password"
       private: yes
 
+    - name: "install_mysql"
+      prompt: "Would you like to install MySQL server"
+      default: false
+
+    - name: "install_apache_php"
+      prompt: "Would you like to install Apache & php"
+      default: false
+
+    - name: "install_composer"
+      prompt: "Would you like to install composer"
+      default: false
+
+    - name: "install_grunt"
+      prompt: "Would you like to install sass, less & grunt"
+      default: false
+
   pre_tasks:
     - include: "system.yml"
 
   roles:
-    - { role: ezyatev.apache-php, when: domain and user and password }
-    - { role: geerlingguy.composer, when: user and password }
-    - { role: geerlingguy.mysql, when: mysql_user and mysql_db and mysql_password }
-    - { role: gotansible.nodejs, when: user and password }
-    - { role: AsianChris.rubygems, when: user and password }
-    - { role: manala.npm, when: user and password }
+    - { role: ezyatev.apache-php, when: install_apache_php and domain and user and password }
+    - { role: geerlingguy.composer, when: install_composer and user and password }
+    - { role: geerlingguy.mysql, when: install_mysql and mysql_user and mysql_db and mysql_password }
+    - { role: gotansible.nodejs, when: install_grunt and user and password }
+    - { role: AsianChris.rubygems, when: install_grunt and user and password }
+    - { role: manala.npm, when: install_grunt and user and password }
 
   tasks:
     - include: "user.yml"
       when: user and password
 
     - include: "apache.yml"
-      when: domain and user and password
+      when: install_apache_php and domain and user and password
 
     - include: "grunt.yml"
-      when: user and password
+      when: install_grunt and user and password

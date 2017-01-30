@@ -1,2 +1,3 @@
 - name: Create project directory.
   file: dest={{ project_dir }} state=directory owner={{ user }} group={{ user }} mode=0770
+  when: install_apache_php
