@@ -9,7 +9,6 @@
     - rsync
     - curl
     - python-mysqldb
-    - php5
     - mc
     - git-core
     - htop
