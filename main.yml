@@ -58,8 +58,12 @@
       default: 'n'
       private: no
 
-    - name: "php_fpm_pools_listen"
-      prompt: "php-fpm pools listen"
+    - name: "php_fpm_pool_name"
+      prompt: "php-fpm pool name"
+      private: no
+
+    - name: "php_fpm_pool_listen"
+      prompt: "php-fpm pool listen"
       default: 8001
       private: no
 

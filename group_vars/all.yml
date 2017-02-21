@@ -48,10 +48,10 @@ apache_vhosts:
 
 
 php_fpm_pools:
- - name: "{{ user }}"
+ - name: "{{ php_fpm_pool_name }}"
    user: "{{ user }}"
    group: "{{ user }}"
-   listen: "{{ php_fpm_pools_listen }}"
+   listen: "{{ php_fpm_pool_listen }}"
    chdir: "{{ home }}"
 
 php_fpm_apt_packages:
@@ -85,7 +85,7 @@ nginx_sites:
      - location ~ \.php$ {
            try_files $uri = 404;
            include fastcgi_params;
-           fastcgi_pass  127.0.0.1:{{ php_fpm_pools_listen }};
+           fastcgi_pass  127.0.0.1:{{ php_fpm_pool_listen }};
            fastcgi_index index.php;
 
            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
