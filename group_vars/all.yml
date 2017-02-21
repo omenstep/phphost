@@ -81,7 +81,7 @@ nginx_sites:
      - server_name {{ domain }}
      - root "{{ project_dir }}"
      - index index.php
-     - location / { try_files $uri $uri/ /index.php?q=$uri&$args; }
+     - location / { try_files $uri $uri/ /index.php?$args; }
      - location ~ \.php$ {
            try_files $uri = 404;
            include fastcgi_params;
