@@ -44,17 +44,17 @@
       private: yes
 
     - name: "install_mysql"
-      prompt: "Would you like to install MySQL server"
+      prompt: "Would you like to configure MySQL server"
       default: 'n'
       private: no
 
     - name: "install_apache_php"
-      prompt: "Would you like to install Apache & php"
+      prompt: "Would you like to configure Apache & php"
       default: 'n'
       private: no
 
     - name: "install_nginx_php"
-      prompt: "Would you like to install nginx & php-fpm"
+      prompt: "Would you like to configure nginx & php-fpm"
       default: 'n'
       private: no
 
