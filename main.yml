@@ -80,6 +80,9 @@
   pre_tasks:
     - include: "system.yml"
 
+    - include: "user.yml"
+      when: user and password
+
   roles:
     - { role: ezyatev.apache-php, when: install_apache_php == 'y' and domain and user and password }
     - { role: nbz4live.php-fpm, when: install_nginx_php == 'y' and domain and user and password }
@@ -91,8 +94,6 @@
     - { role: manala.npm, when: install_grunt == 'y' and user and password }
 
   tasks:
-    - include: "user.yml"
-      when: user and password
 
     - include: "webserver.yml"
       when: domain and user and password
