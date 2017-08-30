@@ -13,6 +13,7 @@
     - git-core
     - htop
     - vim
+    - ruby-dev
 
 - name: Set authorized key for root took from file.
   authorized_key:
