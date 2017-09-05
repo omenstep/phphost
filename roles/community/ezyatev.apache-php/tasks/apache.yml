@@ -14,7 +14,7 @@
   apache2_module: >
     name={{ item }}
     state=present
-  with_items: apache_modules
+  with_items: "{{ apache_modules }}"
   notify:
     - restart apache
   tags:
