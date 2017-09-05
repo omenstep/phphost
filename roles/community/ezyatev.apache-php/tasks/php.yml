@@ -2,7 +2,7 @@
 
 - name: install php packages
   apt: name={{ item }} state=present
-  with_items: php_packages
+  with_items: "{{ php_packages }}"
   tags:
     - php
     - php_package
