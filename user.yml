@@ -6,8 +6,3 @@
 - name: Ensure presence of .bashrc.
   file: state=touch path={{ home }}/.bashrc
   become_user: "{{ user }}"
-
-- name: Disable home directory permissions for others.
-  file:
-    path: "{{ home }}"
-    mode: "0750"

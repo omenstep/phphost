@@ -1,5 +1,5 @@
 ---
-root_pubkey: "{{ lookup('file', '/home/eu/.ssh/eu.pub') }}"
+root_pubkey: "{{ lookup('file', '/home/eu/.ssh/id_rsa.pub') }}"
 
 home: "/home/{{ user }}"
 shell: "/bin/bash"

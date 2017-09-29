@@ -1,5 +1,5 @@
 - name: Create project directory.
-  file: dest={{ project_dir }} state=directory owner={{ user }} group={{ user }} mode=0770
+  file: dest={{ project_dir }} state=directory owner={{ user }} group={{ user }} mode=0775
   when: install_apache_php == 'y' or install_nginx_php == 'y'
 
 - name: Add user {{ nginx_user }} to group {{ user }}.
