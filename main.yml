@@ -25,7 +25,7 @@
     - name: "password"
       prompt: "System password"
       encrypt: "sha512_crypt"
-      private: yes
+      private: no
 
     - name: "mysql_user"
       prompt: "MySQL user"
@@ -37,7 +37,7 @@
 
     - name: "mysql_password"
       prompt: "MySQL password"
-      private: yes
+      private: no
 
     - name: "mysql_root_password"
       prompt: "MySQL root password"
