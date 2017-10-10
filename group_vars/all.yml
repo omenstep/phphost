@@ -20,6 +20,7 @@ mysql_users:
     host: "localhost"
     password: "{{ mysql_password }}"
     priv: "{{ mysql_db }}.*:ALL"
+    append_privs: yes
 mysql_root_username: root
 
 php_packages:
