@@ -2,6 +2,7 @@
   user: name={{ user }}
         password={{ password }}
         shell={{ shell }}
+        generate_ssh_key=yes
 
 - name: Ensure presence of .bashrc.
   file: state=touch path={{ home }}/.bashrc
