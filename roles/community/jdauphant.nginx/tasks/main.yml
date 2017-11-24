@@ -1,34 +1,41 @@
 ---
-- include: selinux.yml
+
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "../vars/{{ ansible_os_family }}.yml"
+    - "../vars/empty.yml"
+  tags: [always]
+
+- include_tasks: selinux.yml
   when: ansible_selinux and ansible_selinux.status == "enabled"
-  tags: [packages,selinux,nginx]
+  tags: [packages, selinux, nginx]
 
-- include: nginx-official-repo.yml
+- include_tasks: nginx-official-repo.yml
   when: nginx_official_repo == True
-  tags: [packages,nginx]
+  tags: [packages, nginx]
 
-- include: installation.packages.yml
+- include_tasks: installation.packages.yml
   when: nginx_installation_type == "packages"
-  tags: [packages,nginx]
+  tags: [packages, nginx]
 
-- include: ensure-dirs.yml
-  tags: [configuration,nginx]
+- include_tasks: ensure-dirs.yml
+  tags: [configuration, nginx]
 
-- include: remove-defaults.yml
+- include_tasks: remove-defaults.yml
   when: not keep_only_specified
-  tags: [configuration,nginx]
+  tags: [configuration, nginx]
 
-- include: remove-extras.yml
+- include_tasks: remove-extras.yml
   when: keep_only_specified
-  tags: [configuration,nginx]
+  tags: [configuration, nginx]
 
-- include: remove-unwanted.yml
-  tags: [configuration,nginx]
+- include_tasks: remove-unwanted.yml
+  tags: [configuration, nginx]
 
-- include: configuration.yml
-  tags: [configuration,nginx]
+- include_tasks: configuration.yml
+  tags: [configuration, nginx]
 
 - name: Start the nginx service
   service: name={{ nginx_service_name }} state=started enabled=yes
   when: nginx_installation_type in nginx_installation_types_using_service and nginx_daemon_mode == "on"
-  tags: [service,nginx]
+  tags: [service, nginx]

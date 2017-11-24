@@ -2,8 +2,8 @@
 language: python
 python: "2.7"
 before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq python-apt python-pycurl
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt python-pycurl
 install:
   - pip install ansible ansible-lint
   - ansible --version
@@ -27,10 +27,11 @@ script:
   - cat /etc/nginx/conf.d/upstream.conf
   - cat /etc/nginx/conf.d/geo.conf
   - cat /etc/nginx/conf.d/gzip.conf
+  - cat /etc/nginx/snippets/error_pages.conf
   - sudo cat /etc/nginx/auth_basic/demo
   - sudo nginx -t
 after_script:
   - ls -l /etc/nginx
   - ls -l /etc/nginx/*
 notifications:
-    webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

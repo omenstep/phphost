@@ -78,9 +78,9 @@
       private: no
 
   pre_tasks:
-    - include: "system.yml"
+    - include_tasks: "system.yml"
 
-    - include: "user.yml"
+    - include_tasks: "user.yml"
       when: user and password
 
   roles:
@@ -95,8 +95,8 @@
 
   tasks:
 
-    - include: "webserver.yml"
+    - include_tasks: "webserver.yml"
       when: domain and user and password
 
-    - include: "grunt.yml"
+    - include_tasks: "grunt.yml"
       when: install_grunt == 'y' and user and password

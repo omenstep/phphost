@@ -66,13 +66,16 @@ Example configuration
        - name: bar
          user: www-data
          group: www-data
-         listen: 8001
+         # Add the host and port in separate variables.
+         listen_host: 127.0.0.1
+         # Attention: One of listen_port or listen is required!
+         listen_port: 8001
          env:
            PATH: "/usr/local/bin:/usr/bin:/bin"
            TMPDIR: "/tmp"
          php_admin_value:
            sendmail_path: "/usr/sbin/sendmail -t -i -f www@my.domain.com"
-           error_log = "/var/log/fpm-bar.www.log"
+           error_log: "/var/log/fpm-bar.www.log"
        php_fpm_ini:
        # PHP section directives
        - option: "engine"

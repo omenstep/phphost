@@ -1,13 +1,13 @@
 ---
 
 - name: dependencies
-  include: depend.yml
+  include_tasks: depend.yml
 
 - name: debian install
-  include: install_debian.yml
+  include_tasks: install_debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: configure
-  include: config.yml
+  include_tasks: config.yml
 
 

@@ -42,6 +42,8 @@
     state: directory
 
 - name: Add GitHub OAuth token for Composer (if configured).
+  become: yes
+  become_user: "{{ composer_home_owner }}"
   template:
     src: "auth.json.j2"
     dest: "{{ composer_home_path }}/auth.json"
@@ -49,5 +51,8 @@
     group: "{{ composer_home_group }}"
   when: composer_github_oauth_token != ''
 
-- include: global-require.yml
+- include_tasks: global-require.yml
   when: composer_global_packages|length > 0
+
+- include_tasks: project-bin.yml
+  when: composer_add_project_to_path
