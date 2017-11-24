@@ -15,12 +15,6 @@
     - vim
     - ruby-dev
 
-- name: Set authorized key for root took from file.
-  authorized_key:
-    user: root
-    state: present
-    key: "{{ root_pubkey }}"
-
 - name: Set timezone to Europe/Moscow.
   shell: 'echo Europe/Moscow >/etc/timezone && dpkg-reconfigure -f noninteractive tzdata'
 
