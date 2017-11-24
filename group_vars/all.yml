@@ -21,17 +21,6 @@ mysql_users:
     append_privs: yes
 mysql_root_username: root
 
-php_packages:
-  - libapache2-mod-php5
-  - php5-mysql
-  - php5-curl
-  - php5-gd
-  - php5-mcrypt
-
-apache_modules:
-  - rewrite
-  - php5
-
 vhost_filename: "{{ domain }}.conf"
 apache_vhosts:
   - server_name: "{{ domain }}"
