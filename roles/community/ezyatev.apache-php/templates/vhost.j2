@@ -54,7 +54,7 @@
     </IfModule>
 
 {% if vhost.php_value is defined %}
-    <IfModule php5_module>
+    <IfModule php_module>
         {% for php_name, php_value in vhost.php_value.iteritems() %}
             php_value {{ php_name }} "{{ php_value }}"
         {% endfor %}

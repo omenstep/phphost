@@ -19,11 +19,11 @@ This is **by default** configuration:
 
 ```yml
 php_packages:
-  - php5
+  - php
 
 apache_modules:
   - rewrite
-  - php5
+  - php
 ```
 
 You can override these variable to get installed additional php modules or in order to enable other apache mods.
