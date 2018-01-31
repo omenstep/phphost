@@ -1,0 +1,35 @@
+---
+- name: is installed
+
+  package:
+    name: php-fpm
+    state: latest
+
+  notify:
+    - restart php-fpm
+
+- name: main configuration
+
+  template:
+    src: poold.conf.j2
+    dest: "/etc/php/{{ php_fpm.version }}/fpm/pool.d/{{ php_fpm.user }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+  notify:
+    - restart php-fpm
+
+- name: enabled
+
+  systemd:
+    name: php{{ php_fpm.version }}-fpm
+    enabled: yes
+
+- name: started
+
+  systemd:
+    name: php{{ php_fpm.version }}-fpm
+    state: started
+
+  tags: live

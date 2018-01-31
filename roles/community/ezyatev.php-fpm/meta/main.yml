@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: ezyatev
+  description: Configures php-fpm
+  license: BSD 3-Clause License
+  min_ansible_version: 2.2
+
+  platforms:
+    - name: Debian
+
+      versions:
+        - stretch
+
+  galaxy_tags:
+    - system

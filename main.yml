@@ -58,10 +58,6 @@
       default: 'n'
       private: no
 
-    - name: "php_fpm_pool_name"
-      prompt: "php-fpm pool name"
-      private: no
-
     - name: "php_fpm_pool_listen"
       prompt: "php-fpm pool listen"
       default: 8001
@@ -85,7 +81,7 @@
 
   roles:
     - { role: ezyatev.apache-php, when: install_apache_php == 'y' and domain and user and password }
-    - { role: nbz4live.php-fpm, when: install_nginx_php == 'y' and domain and user and password }
+    - { role: ezyatev.php-fpm, when: install_nginx_php == 'y' and domain and user and password }
     - { role: jdauphant.nginx, when: install_nginx_php == 'y' and domain and user and password }
     - { role: geerlingguy.composer, when: install_composer == 'y' and user and password }
     - { role: geerlingguy.mysql, when: install_mysql == 'y' and mysql_user and mysql_db and mysql_password }

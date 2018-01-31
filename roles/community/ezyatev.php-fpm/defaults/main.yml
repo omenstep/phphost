@@ -1,0 +1,6 @@
+---
+php_fpm:
+  listen: 127.0.0.1:8000
+  version: 7.0
+  user: nobody
+  group: nobody
