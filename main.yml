@@ -85,7 +85,7 @@
     - { role: jdauphant.nginx, when: install_nginx_php == 'y' and domain and user and password }
     - { role: geerlingguy.composer, when: install_composer == 'y' and user and password }
     - { role: geerlingguy.mysql, when: install_mysql == 'y' and mysql_user and mysql_db and mysql_password }
-    - { role: gotansible.nodejs, when: install_grunt == 'y' and user and password }
+    - { role: ezyatev.nodejs, when: install_grunt == 'y' and user and password }
     - { role: AsianChris.rubygems, when: install_grunt == 'y' and user and password }
     - { role: manala.npm, when: install_grunt == 'y' and user and password }
 
