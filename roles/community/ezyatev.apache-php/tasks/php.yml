@@ -12,7 +12,7 @@
 - name: Copy opcache configuration
   template:
     src=opcache.ini.j2
-    dest=/etc/php5/mods-available/opcache.ini
+    dest=/etc/php/7.0/mods-available/opcache.ini
   tags:
     - php
     - php_ini
