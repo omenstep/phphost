@@ -1,8 +1,8 @@
 # PHP Host
 
-List of Ansible playbooks for install apache, php5, mysql, nodejs, grunt & composer on Debian server and add users/vhosts on this server.
+List of Ansible playbooks for install apache, php, mysql, nodejs, grunt & composer to Debian Stretch and add users/vhosts on this server.
 
-Tested with Debian 8 only.
+Tested with Debian 9 only.
 
 ## Author
 
