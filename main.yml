@@ -18,6 +18,11 @@
       prompt: "Domain name"
       private: no
 
+    - name: "interface"
+      prompt: "Interface"
+      default: "*"
+      private: no
+
     - name: "user"
       prompt: "System user"
       private: no

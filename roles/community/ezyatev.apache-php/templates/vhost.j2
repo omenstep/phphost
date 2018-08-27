@@ -1,5 +1,5 @@
 {% for vhost in apache_vhosts %}
-<VirtualHost *:{% if vhost.listen_port is defined %}{{ vhost.listen_port }}{% else %}{{ listen_port }}{% endif %}>
+<VirtualHost {% if vhost.interface is defined %}{{ vhost.interface }}{% else %}{{ interface }}{% endif %}:{% if vhost.listen_port is defined %}{{ vhost.listen_port }}{% else %}{{ listen_port }}{% endif %}>
     ServerName {{ vhost.server_name }}
     DocumentRoot {{ vhost.document_root }}
 {% if vhost.server_alias is defined %}
