@@ -18,8 +18,8 @@
       prompt: "Domain name"
       private: no
 
-    - name: "interface"
-      prompt: "Interface"
+    - name: "address"
+      prompt: "IP address of the virtual host"
       default: "*"
       private: no
 

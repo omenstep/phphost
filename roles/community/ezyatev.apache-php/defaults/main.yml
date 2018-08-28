@@ -21,7 +21,7 @@ apache_modules:
 
 vhost_filename: aramirez.es.conf
 listen_port: 80
-interface: '*'
+address: '*'
 certificate_file: '/etc/apache2/ssl/server.crt'
 certificate_key_file: '/etc/apache2/ssl/server.key'
 
