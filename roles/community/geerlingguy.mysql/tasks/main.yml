@@ -5,15 +5,12 @@
 # Setup/install tasks.
 - include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
-  static: no
 
 - include_tasks: setup-Debian.yml
   when: ansible_os_family == 'Debian'
-  static: no
 
 - include_tasks: setup-Archlinux.yml
   when: ansible_os_family == 'Archlinux'
-  static: no
 
 - name: Check if MySQL packages were installed.
   set_fact:

@@ -6,7 +6,7 @@
     update_cache: true
   when: ansible_distribution == "Ubuntu"
 
-- include_tasks: 1-install-Debian.yml
+- include: 1-install-Debian.yml
   when:
     - ansible_distribution == "Debian"
     - ansible_distribution_version >= 8

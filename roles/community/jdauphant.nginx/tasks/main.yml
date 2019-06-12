@@ -4,6 +4,7 @@
   with_first_found:
     - "../vars/{{ ansible_os_family }}.yml"
     - "../vars/empty.yml"
+  when: nginx_load_default_vars
   tags: [always]
 
 - include_tasks: selinux.yml
@@ -18,24 +19,32 @@
   when: nginx_installation_type == "packages"
   tags: [packages, nginx]
 
-- include_tasks: ensure-dirs.yml
+- import_tasks: ensure-dirs.yml
   tags: [configuration, nginx]
 
 - include_tasks: remove-defaults.yml
-  when: not keep_only_specified
+  when: not nginx_keep_only_specified
   tags: [configuration, nginx]
 
 - include_tasks: remove-extras.yml
-  when: keep_only_specified
+  when: nginx_keep_only_specified
   tags: [configuration, nginx]
 
-- include_tasks: remove-unwanted.yml
+- import_tasks: remove-unwanted.yml
   tags: [configuration, nginx]
 
-- include_tasks: configuration.yml
+- import_tasks: configuration.yml
   tags: [configuration, nginx]
+
+- include_tasks: cloudflare_configuration.yml
+  when: nginx_set_real_ip_from_cloudflare == True
+  tags: [configuration, nginx]
+
+- include_tasks: amplify.yml
+  when: nginx_amplify == true and (ansible_distribution in ['RedHat', 'CentOS', 'Debian', 'Amazon', 'Ubuntu'])
+  tags: [amplify, nginx]
 
 - name: Start the nginx service
-  service: name={{ nginx_service_name }} state=started enabled=yes
+  service: name={{ nginx_service_name }} state={{nginx_start_service | ternary('started', 'stopped')}} enabled={{nginx_start_at_boot}}
   when: nginx_installation_type in nginx_installation_types_using_service and nginx_daemon_mode == "on"
   tags: [service, nginx]

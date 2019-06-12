@@ -11,9 +11,9 @@ script:
   - ansible-lint tasks/main.yml
   - echo localhost > inventory
   - ansible-playbook -i inventory --syntax-check --list-tasks test/test.yml -e "role_name=ansible-role-nginx" -e "hosts_group=hosts_group"
-  - ansible-playbook -i inventory --connection=local --sudo -vvvv test/test.yml -u root -e "role_name=ansible-role-nginx" -e "hosts_group=localhost"
+  - ansible-playbook -i inventory --connection=local --become -vvvv test/test.yml -u root -e "role_name=ansible-role-nginx" -e "hosts_group=localhost"
   - >
-      ansible-playbook -i inventory --connection=local --sudo -vvvv test/test.yml -u root -e "role_name=ansible-role-nginx" -e "hosts_group=localhost"
+      ansible-playbook -i inventory --connection=local --become -vvvv test/test.yml -u root -e "role_name=ansible-role-nginx" -e "hosts_group=localhost"
       | grep -q 'changed=0.*failed=0'
       && (echo 'Idempotence test: pass' && exit 0)
       || (echo 'Idempotence test: fail' && exit 1)
@@ -27,6 +27,7 @@ script:
   - cat /etc/nginx/conf.d/upstream.conf
   - cat /etc/nginx/conf.d/geo.conf
   - cat /etc/nginx/conf.d/gzip.conf
+  - cat /etc/nginx/conf.d/cloudflare.conf
   - cat /etc/nginx/snippets/error_pages.conf
   - sudo cat /etc/nginx/auth_basic/demo
   - sudo nginx -t

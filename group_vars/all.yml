@@ -50,6 +50,7 @@ php_fpm_apt_packages:
   - php{{php_fpm_version}}-memcached
   - php{{php_fpm_version}}-memcache
   - php{{php_fpm_version}}-mbstring
+  - php{{php_fpm_version}}-fpm
 
 
 nginx_user: "www-data"

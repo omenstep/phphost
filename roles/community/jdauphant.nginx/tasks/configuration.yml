@@ -11,6 +11,7 @@
     src: auth_basic.j2
     dest: "{{ nginx_conf_dir }}/auth_basic/{{ item.key }}"
     mode: 0750
+    group: "{{ nginx_group }}"
   with_dict: "{{ nginx_auth_basic_files }}"
 
 - name: Create the configurations for sites
@@ -28,7 +29,8 @@
     src: "{{ nginx_conf_dir }}/sites-available/{{ item.key }}.conf"
     dest: "{{ nginx_conf_dir }}/sites-enabled/{{ item.key }}.conf"
   with_dict: "{{ nginx_sites }}"
-  when: item.key not in nginx_remove_sites
+  when: (item.key not in nginx_remove_sites) and (item.key not in nginx_disabled_sites)
+  ignore_errors: "{{ ansible_check_mode }}"
   notify:
     - reload nginx
 
@@ -56,3 +58,18 @@
   notify:
     - reload nginx
   when: nginx_stream_params or nginx_stream_configs
+
+- name: Create links for modules-enabled
+  file:
+    state: link
+    src: "/usr/share/nginx/modules/{{ item }}.conf"
+    dest: "{{ nginx_conf_dir }}/modules-enabled/{{ item }}.conf"
+  with_items: "{{ nginx_module_configs }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  notify:
+    - reload nginx
+  when:
+    - (item not in nginx_remove_modules) and (item not in nginx_disabled_modules)
+    - ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+    - nginx_install_epel_repo
+

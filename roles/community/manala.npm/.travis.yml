@@ -1,19 +1,30 @@
 language: generic
 
+branches:
+  only:
+    - master
+
 services:
   - docker
 
 env:
   matrix:
-    - DISTRIBUTIONS=debian.wheezy  ANSIBLE_VERSION=2.3.2.0
-    - DISTRIBUTIONS=debian.jessie  ANSIBLE_VERSION=2.3.2.0
-    - DISTRIBUTIONS=debian.stretch ANSIBLE_VERSION=2.3.2.0
-    - DISTRIBUTIONS=centos.7       ANSIBLE_VERSION=2.3.2.0
-    - DISTRIBUTIONS=ubuntu.xenial  ANSIBLE_VERSION=2.3.2.0
+    - DISTRIBUTIONS=debian.wheezy  ANSIBLE_VERSION=2.5.5
+    - DISTRIBUTIONS=debian.jessie  ANSIBLE_VERSION=2.5.5
+    - DISTRIBUTIONS=debian.stretch ANSIBLE_VERSION=2.5.5
+    - DISTRIBUTIONS=centos.7       ANSIBLE_VERSION=2.5.5
+    - DISTRIBUTIONS=ubuntu.xenial  ANSIBLE_VERSION=2.5.5
 
 script:
   - make lint
   - make test
+
+jobs:
+  include:
+    - stage: release
+      script:
+        - gem install chandler -v 0.7.0
+        - chandler push `perl -lne '/^## \[(?!Unreleased)([\w.-]+)\] - [\w-]+$/ && print $1;' CHANGELOG.md | head -1`
 
 notifications:
   webhooks:
