@@ -1,107 +1,120 @@
 ---
-- hosts: localhost
-  gather_facts: no
-  vars_prompt:
-  - name: "vps"
-    prompt: "VPS"
-    private: no
-  tasks:
-    - add_host:
-        name: "{{ vps }}"
-        groups: dynamically_created_hosts
-
-
-- hosts: dynamically_created_hosts
-
-  vars_prompt:
-    - name: "domain"
-      prompt: "Domain name"
-      private: no
-
-    - name: "address"
-      prompt: "IP address of the virtual host"
-      default: "*"
-      private: no
-
-    - name: "user"
-      prompt: "System user"
-      private: no
-
-    - name: "password"
-      prompt: "System password"
-      encrypt: "sha512_crypt"
-      private: no
-
-    - name: "mysql_user"
-      prompt: "MySQL user"
-      private: no
-
-    - name: "mysql_db"
-      prompt: "MySQL DB"
-      private: no
-
-    - name: "mysql_password"
-      prompt: "MySQL password"
-      private: no
-
-    - name: "mysql_root_password"
-      prompt: "MySQL root password"
-      private: yes
-
-    - name: "install_mysql"
-      prompt: "Would you like to configure MySQL server"
-      default: 'n'
-      private: no
-
-    - name: "install_apache_php"
-      prompt: "Would you like to configure Apache & php"
-      default: 'n'
-      private: no
-
-    - name: "install_nginx_php"
-      prompt: "Would you like to configure nginx & php-fpm"
-      default: 'n'
-      private: no
-
-    - name: "php_fpm_pool_name"
-      prompt: "php-fpm pool name"
-      private: no
-
-    - name: "php_fpm_pool_listen"
-      prompt: "php-fpm pool listen"
-      default: 8001
-      private: no
-
-    - name: "install_composer"
-      prompt: "Would you like to install composer"
-      default: 'n'
-      private: no
-
-    - name: "install_grunt"
-      prompt: "Would you like to install sass, less & grunt"
-      default: 'n'
-      private: no
+- hosts: production
 
   pre_tasks:
-    - include_tasks: "system.yml"
-
-    - include_tasks: "user.yml"
-      when: user and password
-
-  roles:
-    - { role: ezyatev.apache-php, when: install_apache_php == 'y' and domain and user and password }
-    - { role: nbz4live.php-fpm, when: install_nginx_php == 'y' and domain and user and password }
-    - { role: jdauphant.nginx, when: install_nginx_php == 'y' and domain and user and password }
-    - { role: geerlingguy.composer, when: install_composer == 'y' and user and password }
-    - { role: geerlingguy.mysql, when: install_mysql == 'y' and mysql_user and mysql_db and mysql_password }
-    - { role: gotansible.nodejs, when: install_grunt == 'y' and user and password }
-    - { role: AsianChris.rubygems, when: install_grunt == 'y' and user and password }
-    - { role: manala.npm, when: install_grunt == 'y' and user and password }
+    - name: Include vars of apps
+      include_vars:
+        file: apps.yml
+        name: apps
 
   tasks:
+    - name: System dependencies
+      include_tasks: "system.yml"
 
-    - include_tasks: "webserver.yml"
-      when: domain and user and password
+    - name: System user 
+      include_tasks: "user.yml"
+      vars:
+          user: "{{ item.user }}"
+          password: "{{ item.password | password_hash('md5') }}"
+      when: item.user and item.password
+      with_items: "{{ apps[inventory_hostname] }}"
 
-    - include_tasks: "grunt.yml"
-      when: install_grunt == 'y' and user and password
+    - name: Apache PHP
+      vars:
+        domain: "{{ loop_item.domain }}"
+        user: "{{ loop_item.user }}"
+        address: "{{ loop_item.address }}"
+      include_role:
+        name: ezyatev.apache-php
+      when: loop_item.install_apache_php == 'y' and domain and user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+    
+    - name: PHP-FPM
+      vars:
+        domain: "{{ loop_item.domain }}"
+        user: "{{ loop_item.user }}"
+        address: "{{ loop_item.address }}"
+        php_fpm_pool_name: "{{ loop_item.php_fpm_pool_name }}"
+        php_fpm_pool_listen: "{{ loop_item.php_fpm_pool_listen }}"
+      include_role:
+        name:  nbz4live.php-fpm
+      when: loop_item.install_nginx_php == 'y' and domain and user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+    
+    - name: Nginx PHP
+      vars:
+        domain: "{{ loop_item.domain }}"
+        user: "{{ loop_item.user }}"
+        address: "{{ loop_item.address }}"
+        php_fpm_pool_listen: "{{ loop_item.php_fpm_pool_listen }}"
+      include_role:
+        name: jdauphant.nginx
+      when: loop_item.install_nginx_php == 'y' and domain and user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+
+    - name: PHP Composer
+      include_role:
+        name: geerlingguy.composer
+      when: loop_item.install_composer == 'y' and loop_item.user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+
+    - name: MySQL
+      vars:
+        mysql_user: "{{ loop_item.mysql_user }}"
+        mysql_db: "{{ loop_item.mysql_db }}"
+        mysql_password: "{{ loop_item.mysql_password }}"
+      include_role:
+        name: geerlingguy.mysql
+      when: loop_item.install_mysql == 'y' and mysql_db and mysql_user and mysql_password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+
+    - name: NodeJS
+      include_role:
+        name: gotansible.nodejs
+      when: loop_item.install_grunt == 'y' and loop_item.user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+
+    - name: RubyGems
+      include_role:
+        name: AsianChris.rubygems
+      when: loop_item.install_grunt == 'y' and loop_item.user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+
+    - name: NPM
+      include_role:
+        name: manala.npm
+      when: loop_item.install_grunt == 'y' and loop_item.user and loop_item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+      loop_control:
+        loop_var: loop_item
+
+    - name: Webserver
+      include_tasks: "webserver.yml"
+      vars:
+          user: "{{ item.user }}"
+          domain: "{{ item.password }}"
+          install_apache_php: "{{ item.install_apache_php }}"
+          install_nginx_php: "{{ item.install_nginx_php }}"
+      when: item.domain and user and item.password
+      with_items: "{{ apps[inventory_hostname] }}"
+
+    - name: Grunt 
+      include_tasks: "grunt.yml"
+      vars:
+          user: "{{ item.user }}"
+      when: item.install_grunt == 'y' and item.user and item.password
+      with_items: "{{ apps[inventory_hostname] }}"

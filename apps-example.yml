@@ -1,0 +1,42 @@
+ip_or_vps1:
+  - domain: example.com
+    address: ip_or_*
+    user: example
+    password: password
+
+    install_mysql: y
+    mysql_user: example
+    mysql_db: example
+    mysql_password: example
+    mysql_root_password: example
+
+    install_apache_php: y
+
+    install_composer: y
+    install_grunt: y
+
+    install_nginx_php: n
+    php_fpm_pool_name: 
+    php_fpm_pool_listen: 8001
+
+
+ip_or_vps2:
+  - domain: example.com
+    address: ip_or_*
+    user: example
+    password: password
+
+    install_mysql: y
+    mysql_user: example
+    mysql_db: example
+    mysql_password: example
+    mysql_root_password: example
+
+    install_apache_php: y
+
+    install_composer: y
+    install_grunt: y
+
+    install_nginx_php: n
+    php_fpm_pool_name: 
+    php_fpm_pool_listen: 8001

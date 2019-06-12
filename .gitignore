@@ -1,3 +1,5 @@
 .idea/
 phphost.iml
 *.retry
+apps.yml
+inventory
