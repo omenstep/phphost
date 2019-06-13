@@ -106,7 +106,7 @@
       include_tasks: "webserver.yml"
       vars:
           user: "{{ item.user }}"
-          domain: "{{ item.password }}"
+          domain: "{{ item.domain }}"
           install_apache_php: "{{ item.install_apache_php }}"
           install_nginx_php: "{{ item.install_nginx_php }}"
       when: item.domain and user and item.password
